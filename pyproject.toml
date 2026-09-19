@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zeroshot-vep"
+version = "0.1.0"
+description = "Zero-shot single-nucleotide variant effect prediction with pretrained DNA language models"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Raaif Yousuf" }]
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scipy>=1.13",
+    "scikit-learn>=1.5",
+]
+
+[project.optional-dependencies]
+# Pretrained model scorers (CPU PyTorch). Not needed for the test suite.
+models = [
+    "torch>=2.5",
+    "transformers>=4.45,<5",
+    "einops>=0.8",
+]
+# Benchmark data preparation and figures.
+bench = [
+    "matplotlib>=3.9",
+    "openpyxl>=3.1",
+]
+
+[project.scripts]
+zsvep = "zeroshot_vep.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zeroshot_vep"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "models: needs downloaded pretrained weights (deselected by default)",
+]
+addopts = "-m 'not models'"
