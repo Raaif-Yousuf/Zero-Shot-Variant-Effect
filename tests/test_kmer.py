@@ -3,7 +3,8 @@ import math
 import numpy as np
 import pytest
 
-from zeroshot_vep.scorers.kmer import KmerMarkovScorer
+from zeroshot_vep.scorers.kmer import KmerMarkovScorer, _encode
+from zeroshot_vep.variant import reverse_complement
 
 
 def _make_fasta(tmp_path, seq, chrom="chrT"):
@@ -63,6 +64,51 @@ def test_kmer_max_window_is_none(tmp_path):
     fasta = _make_fasta(tmp_path, "AACG")
     scorer = KmerMarkovScorer(order=1, fasta_path=fasta, chroms=["chrT"])
     assert scorer.max_window is None
+
+
+def test_reverse_strand_counts_match_explicit_reverse_complement():
+    # Counts derived by permuting the forward counts (the fast path used in
+    # training) must equal counts obtained by literally reverse-complementing
+    # the sequence and counting that directly (the naive/reference path).
+    k = 2
+    seq = "ACGTACGGTTAACCGGTTAGCATGACGTN"  # includes an N to exercise masking
+    size = 4 ** (k + 1)
+    powers = 4 ** np.arange(k, -1, -1)
+
+    fwd_counts = KmerMarkovScorer._count_kmers(_encode(seq), k, powers, size)
+    perm = KmerMarkovScorer._rc_permutation(k)
+    derived_rc_counts = np.zeros(size, dtype=np.int64)
+    derived_rc_counts[perm] = fwd_counts
+
+    explicit_rc_counts = KmerMarkovScorer._count_kmers(
+        _encode(reverse_complement(seq)), k, powers, size
+    )
+
+    np.testing.assert_array_equal(derived_rc_counts, explicit_rc_counts)
+
+
+def test_rc_permutation_is_an_involution():
+    perm = KmerMarkovScorer._rc_permutation(3)
+    np.testing.assert_array_equal(perm[perm], np.arange(len(perm)))
+
+
+def test_count_kmers_chunking_matches_single_pass(monkeypatch):
+    # Force a tiny chunk size so a >1-chunk sequence exercises the boundary
+    # handling, and confirm it gives the same counts as one big chunk.
+    import zeroshot_vep.scorers.kmer as kmer_module
+
+    k = 2
+    seq = "ACGTACGGTTAACCGGTTAGCATGACGTNACGT"
+    codes = _encode(seq)
+    size = 4 ** (k + 1)
+    powers = 4 ** np.arange(k, -1, -1)
+
+    baseline = KmerMarkovScorer._count_kmers(codes, k, powers, size)
+
+    monkeypatch.setattr(kmer_module, "_COUNT_CHUNK", 5)
+    chunked = KmerMarkovScorer._count_kmers(codes, k, powers, size)
+
+    np.testing.assert_array_equal(baseline, chunked)
 
 
 def test_kmer_skips_n_context(tmp_path):

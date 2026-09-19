@@ -8,17 +8,20 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
-from numpy.lib.stride_tricks import sliding_window_view
 
 from zeroshot_vep.reference import ReferenceGenome
 from zeroshot_vep.scorers.base import Scorer
-from zeroshot_vep.variant import reverse_complement
 
 _BASE_CODE = {"A": 0, "C": 1, "G": 2, "T": 3}
+_COMPLEMENT_CODE = np.array([3, 2, 1, 0])  # A<->T, C<->G
 
 _LUT = np.full(256, -1, dtype=np.int8)
 for _base, _code in _BASE_CODE.items():
     _LUT[ord(_base)] = _code
+
+# Bases of window-start positions processed at a time when counting k-mers, so
+# peak memory stays bounded regardless of chromosome length.
+_COUNT_CHUNK = 8_000_000
 
 
 def _encode(seq: str) -> np.ndarray:
@@ -102,25 +105,63 @@ class KmerMarkovScorer(Scorer):
     def _train(self, reference: ReferenceGenome) -> np.ndarray:
         k = self.order
         size = 4 ** (k + 1)
+        perm = self._rc_permutation(k)
         joint = np.zeros(size, dtype=np.int64)
         for chrom in self.chroms:
             seq = reference.fetch(chrom, 0, reference.length(chrom))
-            joint += self._count_kmers(_encode(seq), k, self._train_powers, size)
-            joint += self._count_kmers(
-                _encode(reverse_complement(seq)), k, self._train_powers, size
-            )
+            fwd_counts = self._count_kmers(_encode(seq), k, self._train_powers, size)
+            joint += fwd_counts
+            # The reverse strand's forward (k+1)-mer at a position is the
+            # reverse complement of the forward strand's (k+1)-mer there, so
+            # its counts are a permutation of the forward counts. This avoids
+            # allocating a second full-chromosome string and re-scanning it.
+            rc_counts = np.zeros(size, dtype=np.int64)
+            rc_counts[perm] = fwd_counts
+            joint += rc_counts
         return joint
 
     @staticmethod
+    def _rc_permutation(k: int) -> np.ndarray:
+        """Map each (k+1)-mer index to the index of its reverse complement."""
+        size = 4 ** (k + 1)
+        idx = np.arange(size, dtype=np.int64)
+        digits = np.empty((size, k + 1), dtype=np.int64)
+        rem = idx
+        for j in range(k + 1):
+            place = 4 ** (k - j)
+            digits[:, j] = rem // place
+            rem = rem % place
+        rc_digits = _COMPLEMENT_CODE[digits[:, ::-1]]
+        powers = 4 ** np.arange(k, -1, -1)
+        return (rc_digits * powers).sum(axis=1)
+
+    @staticmethod
     def _count_kmers(codes: np.ndarray, k: int, powers: np.ndarray, size: int) -> np.ndarray:
-        if len(codes) < k + 1:
-            return np.zeros(size, dtype=np.int64)
-        windows = sliding_window_view(codes, k + 1)
-        valid = np.all(windows >= 0, axis=1)
-        if not np.any(valid):
-            return np.zeros(size, dtype=np.int64)
-        idx = windows[valid].astype(np.int64) @ powers
-        return np.bincount(idx, minlength=size).astype(np.int64)
+        """Count valid (k+1)-mers, processing in memory-bounded chunks.
+
+        Each chunk's rolling index is built with k+1 shifted int64 adds
+        instead of materializing a (chunk, k+1) window array, so peak memory
+        stays O(chunk size) regardless of how long ``codes`` is.
+        """
+        joint = np.zeros(size, dtype=np.int64)
+        n = len(codes)
+        total_windows = n - k
+        if total_windows <= 0:
+            return joint
+        for start in range(0, total_windows, _COUNT_CHUNK):
+            stop = min(start + _COUNT_CHUNK, total_windows)
+            length = stop - start
+            segment = codes[start : stop + k]
+            idx = np.zeros(length, dtype=np.int64)
+            invalid = np.zeros(length, dtype=bool)
+            for j in range(k + 1):
+                piece = segment[j : j + length]
+                invalid |= piece < 0
+                idx += piece.astype(np.int64) * powers[j]
+            valid_idx = idx[~invalid]
+            if valid_idx.size:
+                joint += np.bincount(valid_idx, minlength=size).astype(np.int64)
+        return joint
 
     # -- scoring --------------------------------------------------------------
 
