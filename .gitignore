@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Data, model weights and score caches stay out of git
+data/raw/
+data/processed/
+.cache/
+*.fa
+*.fa.gz
+*.fai
+*.gzi
+*.vcf.gz
+*.wigFix.gz
+*.sqlite
+*.safetensors
+*.bin
+*.pt
+
+# Editors / OS
+.idea/
+.vscode/
+.vs/
+.DS_Store
+Thumbs.db
