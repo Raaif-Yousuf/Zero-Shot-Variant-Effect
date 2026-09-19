@@ -15,8 +15,8 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install (core + bench + dev, no model weights)
-        run: uv sync --locked --extra bench
+      - name: Install (core + models + bench + dev; tests never download weights)
+        run: uv sync --locked --extra models --extra bench
       - name: Lint
         run: uv run ruff check . && uv run ruff format --check .
       - name: Test
