@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.axes import Axes  # noqa: E402
+from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
 from sklearn.metrics import (  # noqa: E402
     average_precision_score,
     precision_recall_curve,
@@ -44,6 +45,11 @@ _AXIS = "#c3c2b7"
 _DAMAGING_COLOR = "#e34948"
 _BENIGN_COLOR = "#2a78d6"
 _DPI = 200
+
+# Sequential blue ramp (steps 100/250/400/550/700 of the palette's single-hue scale).
+_SEQUENTIAL_BLUE = LinearSegmentedColormap.from_list(
+    "sequential_blue", ["#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"]
+)
 
 
 def _style_axes(ax: Axes) -> None:
@@ -243,5 +249,49 @@ def plot_auroc_vs_window(
     ax.set_title("AUROC vs context window")
     if models:
         ax.legend(frameon=False, fontsize=8, loc="best")
+    fig.tight_layout()
+    return _save(fig, out_path)
+
+
+def plot_score_vs_continuous(
+    df: pd.DataFrame,
+    out_path: Path | str,
+    *,
+    score_col: str = "score",
+    continuous_col: str = "function_score",
+    score_label: str = "score",
+    continuous_label: str = "function score",
+    title: str | None = None,
+) -> Path:
+    """Hexbin density scatter of a damaging score against a continuous target.
+
+    Uses the sequential blue ramp (density is a magnitude, not a category) and
+    reports Spearman rho between the two columns in the title.
+    """
+    sub = df[[score_col, continuous_col]].dropna()
+    fig, ax = plt.subplots(figsize=(5.5, 5))
+    _style_axes(ax)
+
+    if len(sub) >= 2:
+        hb = ax.hexbin(
+            sub[score_col].to_numpy(dtype=float),
+            sub[continuous_col].to_numpy(dtype=float),
+            gridsize=35,
+            cmap=_SEQUENTIAL_BLUE,
+            mincnt=1,
+        )
+        cbar = fig.colorbar(hb, ax=ax)
+        cbar.set_label("count", color=_INK_SECONDARY, fontsize=9)
+        cbar.ax.tick_params(colors=_INK_SECONDARY, labelsize=8)
+
+    if len(sub) >= 3:
+        rho = float(sub[score_col].corr(sub[continuous_col], method="spearman"))
+        rho_text = f"{rho:.3f}"
+    else:
+        rho_text = "n/a"
+
+    ax.set_xlabel(score_label)
+    ax.set_ylabel(continuous_label)
+    ax.set_title(title or f"{score_label} vs {continuous_label} (Spearman rho {rho_text})")
     fig.tight_layout()
     return _save(fig, out_path)
