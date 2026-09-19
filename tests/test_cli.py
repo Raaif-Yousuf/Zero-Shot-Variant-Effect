@@ -60,6 +60,40 @@ def test_score_end_to_end_with_kmer(tmp_path):
     assert "llr_rev" in result.columns
 
 
+def test_score_defaults_kmer_cache_to_default_cache_dir(tmp_path, monkeypatch):
+    # Without --cache-dir or --no-cache, the kmer scorer's own npz training
+    # cache should still land under the default .cache/zsvep (cwd-relative),
+    # the same place the score cache would use.
+    monkeypatch.chdir(tmp_path)
+    seq = "ACGTACGTACGTACGTACGTACGTACGTACGT" * 4
+    fasta = _write_fasta(tmp_path, seq)
+    ref_base = seq[19]
+    alt_base = "G" if ref_base != "G" else "A"
+    variants_path = _write_tsv(tmp_path, [("chr1", 20, ref_base, alt_base, "v1")])
+    out_path = tmp_path / "scores.tsv"
+
+    rc = main(
+        [
+            "score",
+            "--variants",
+            str(variants_path),
+            "--fasta",
+            str(fasta),
+            "--model",
+            "kmer",
+            "--window",
+            "20",
+            "--out",
+            str(out_path),
+        ]
+    )
+
+    assert rc == 0
+    npz_files = list((tmp_path / ".cache" / "zsvep").glob("*.npz"))
+    assert len(npz_files) == 1
+    assert (tmp_path / ".cache" / "zsvep" / "scores.sqlite").exists()
+
+
 def test_score_reports_error_for_unknown_model(tmp_path):
     seq = "ACGT" * 10
     fasta = _write_fasta(tmp_path, seq)

@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 
 from zeroshot_vep import __version__
-from zeroshot_vep.cache import ScoreCache
+from zeroshot_vep.cache import DEFAULT_CACHE_DIR, ScoreCache
 from zeroshot_vep.engine import score_variants
 from zeroshot_vep.io import read_variants, write_scores
 from zeroshot_vep.reference import ReferenceGenome
@@ -51,7 +51,9 @@ def _cmd_models(args: argparse.Namespace) -> int:
     return 0
 
 
-def _build_scorer_kwargs(name: str, args: argparse.Namespace, chroms: list[str]) -> dict:
+def _build_scorer_kwargs(
+    name: str, args: argparse.Namespace, chroms: list[str], cache_dir: Path | None
+) -> dict:
     """Build the kwargs a scorer's constructor actually accepts."""
     candidates = {
         "mode": args.mode,
@@ -59,7 +61,7 @@ def _build_scorer_kwargs(name: str, args: argparse.Namespace, chroms: list[str])
         "num_threads": args.threads,
         "fasta_path": args.fasta,
         "chroms": chroms,
-        "cache_dir": args.cache_dir,
+        "cache_dir": cache_dir,
     }
     target, _ = SCORERS[name]
     module_name, class_name = target.split(":")
@@ -98,8 +100,13 @@ def _cmd_score(args: argparse.Namespace) -> int:
 
     chroms = sorted({v.chrom for v in variants})
 
+    # A scorer's own on-disk cache (e.g. the kmer model's trained counts)
+    # follows the same default location as the score cache unless caching is
+    # disabled outright, even when --cache-dir was not given explicitly.
+    scorer_cache_dir = None if args.no_cache else (args.cache_dir or DEFAULT_CACHE_DIR)
+
     try:
-        kwargs = _build_scorer_kwargs(args.model_name, args, chroms)
+        kwargs = _build_scorer_kwargs(args.model_name, args, chroms, scorer_cache_dir)
         scorer = get_scorer(args.model_name, **kwargs)
     except Exception as exc:
         print(f"error building scorer {args.model_name!r}: {exc}", file=sys.stderr)
