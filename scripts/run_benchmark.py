@@ -13,6 +13,14 @@ Concurrency note: pass ``--cache-dir`` (or rely on the default, one directory
 per scorer name under ``<data-dir's repo>/.cache/bench/<scorer>``) and never
 launch two concurrent processes whose plan entries share the same ``scorer``
 name -- they would share one sqlite score-cache file.
+
+On a 16-thread machine, running 3 concurrent processes at ``--threads 4`` each
+(12 requested threads) measured a 10-17x per-position slowdown versus one
+isolated process, not the mild oversubscription penalty one might expect
+(e.g. hyenadna-small-32k site at window 1024: 0.288 s/position isolated vs
+3.33 s/position with 3 concurrent processes). At most 2 concurrent processes
+recovered throughput close to the isolated rate. Keep to at most 2 concurrent
+invocations of this script.
 """
 
 from __future__ import annotations
