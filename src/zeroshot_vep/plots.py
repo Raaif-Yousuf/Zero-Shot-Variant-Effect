@@ -70,7 +70,10 @@ def _save(fig: plt.Figure, out_path: Path | str) -> Path:
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.patch.set_facecolor(_SURFACE)
-    fig.savefig(out_path, dpi=_DPI, facecolor=_SURFACE)
+    # bbox_inches="tight" is required, not cosmetic: a figure-level legend placed
+    # above the axes (plot_score_distributions) and long titles (plot_score_vs_continuous)
+    # both extend past the nominal figure bounds and get silently clipped without it.
+    fig.savefig(out_path, dpi=_DPI, facecolor=_SURFACE, bbox_inches="tight")
     plt.close(fig)
     return out_path
 
