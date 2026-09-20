@@ -29,6 +29,17 @@ uv run zsvep models
 Prints each registry name and its `max_window` in bases (`kmer`'s is
 unbounded).
 
+## A CLI session
+
+A full walkthrough with the `kmer` order-6 Markov scorer against a small synthetic reference,
+needing no downloads or model weights:
+
+![zsvep CLI session: --help, models, and a kmer score run against a synthetic reference, ending with the score table](screenshots/cli-session.png)
+
+*`zsvep --help` and `zsvep models`, then `zsvep score` against a synthetic FASTA and seven SNVs
+with the `kmer` scorer, ending with the score table (one variant deliberately has a mismatching
+`ref` allele to show the `ref_mismatch` status).*
+
 ## Scoring variants
 
 ```
