@@ -1,0 +1,34 @@
+run_id	dataset	scorer	mode	order	window	subset	n_variants	n_positions	threads	wall_seconds	reused_from
+brca1_kmer_o2_w1024	brca1	kmer		2	1024	all	3893	1326	4	18.001	
+brca1_kmer_o4_w1024	brca1	kmer		4	1024	all	3893	1326	4	30.069	
+brca1_kmer_o6_w1024	brca1	kmer		6	1024	all	3893	1326	4	36.457	
+brca1_kmer_o8_w1024	brca1	kmer		8	1024	all	3893	1326	4	41.008	
+brca1_phylop100way	brca1	phylop100way				all	3893	1326	4	0.004	
+brca1_phylop_mammalian	brca1	phylop_mammalian				all	3893	1326	4	0.025	
+brca1_cadd	brca1	cadd				all	3893	1326	4	0.04	
+brca1_hyenadna-tiny-1k_full_w1024	brca1	hyenadna-tiny-1k	full		1024	all	3893	1326	4	1854.399	
+brca1_hyenadna-small-32k_full_w1024	brca1	hyenadna-small-32k	full		1024	all	3893	1326	4	2003.062	
+brca1_nt-v2-50m_w1024	brca1	nt-v2-50m			1024	all	3893	1326	4	2197.621	
+clinvar_kmer_o6_w1024	clinvar	kmer		6	1024	all	2000	1982	4	5.854	
+clinvar_phylop100way	clinvar	phylop100way				all	2000	1982	4	0.003	
+clinvar_hyenadna-tiny-1k_full_w1024	clinvar	hyenadna-tiny-1k	full		1024	all	2000	1982	4	878.905	
+clinvar_nt-v2-50m_w1024	clinvar	nt-v2-50m			1024	all	2000	1982	4	4502.985	
+brca1_hyenadna-small-32k_site_w1024	brca1	hyenadna-small-32k	site		1024	all	3893	1326	4	201.915	
+brca1_hyenadna-small-32k_site_w256_sweep	brca1	hyenadna-small-32k	site		256	sweep	174	60	4	3.976	
+brca1_hyenadna-small-32k_site_w1024_sweep	brca1	hyenadna-small-32k	site		1024	sweep	174	60	4	0.025	brca1_hyenadna-small-32k_site_w1024.tsv
+clinvar_hyenadna-small-32k_full_w1024	clinvar	hyenadna-small-32k	full		1024	all	2000	1982	4	3238.037	
+brca1_hyenadna-small-32k_site_w4096_sweep	brca1	hyenadna-small-32k	site		4096	sweep	174	60	4	42.232	
+brca1_hyenadna-small-32k_full_w256_sweep	brca1	hyenadna-small-32k	full		256	sweep	174	60	4	21.629	
+brca1_hyenadna-small-32k_full_w1024_sweep	brca1	hyenadna-small-32k	full		1024	sweep	174	60	4	0.018	brca1_hyenadna-small-32k_full_w1024.tsv
+brca1_hyenadna-small-32k_site_w16384_sweep	brca1	hyenadna-small-32k	site		16384	sweep	174	60	4	262.866	
+brca1_hyenadna-small-32k_full_w4096_sweep	brca1	hyenadna-small-32k	full		4096	sweep	174	60	4	291.321	
+brca1_hyenadna-small-32k_site_w32768_sweep	brca1	hyenadna-small-32k	site		32768	sweep	174	60	4	588.723	
+brca1_hyenadna-medium-160k_site_w1024_sweep	brca1	hyenadna-medium-160k	site		1024	sweep	174	60	4	25.074	
+brca1_hyenadna-small-32k_full_w16384_sweep	brca1	hyenadna-small-32k	full		16384	sweep	174	60	4	844.161	
+brca1_hyenadna-medium-160k_site_w32768_sweep	brca1	hyenadna-medium-160k	site		32768	sweep	174	60	4	1379.287	
+brca1_hyenadna-medium-160k_full_w1024_sweep	brca1	hyenadna-medium-160k	full		1024	sweep	174	60	4	692.466	
+brca1_hyenadna-small-32k_full_w32768_sweep	brca1	hyenadna-small-32k	full		32768	sweep	174	60	4	2206.328	
+brca1_kmer_o6_w1024_sweep	brca1	kmer		6	1024	sweep	174	60	4	0.018	brca1_kmer_o6_w1024.tsv
+brca1_nt-v2-50m_w1024_sweep	brca1	nt-v2-50m			1024	sweep	174	60	4	0.021	brca1_nt-v2-50m_w1024.tsv
+brca1_nt-v2-50m_w6144_sweep	brca1	nt-v2-50m			6144	sweep	174	60	4	129.57	
+brca1_nt-v2-50m_w12282_sweep	brca1	nt-v2-50m			12282	sweep	174	60	4	336.707	
