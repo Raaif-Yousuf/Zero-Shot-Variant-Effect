@@ -1,0 +1,74 @@
+section	group_type	group	metric	value	n
+nt_masked_recovery	overall	overall	top1_kmer_acc	0.12666666666666668	300
+nt_masked_recovery	overall	overall	top1_center_base_acc	0.43333333333333335	300
+nt_masked_recovery	overall	overall	mean_logp_ref_kmer	-7.6302001545329885	300
+hyena_real_vs_shuffled	overall	overall	mean_real_bits_per_base	1.5895856755255051	200
+hyena_real_vs_shuffled	overall	overall	mean_shuffled_bits_per_base	1.9405987082363965	200
+hyena_real_vs_shuffled	overall	overall	mean_paired_diff_bits_per_base	0.3510130327108916	200
+hyena_real_vs_shuffled	overall	overall	frac_real_higher_likelihood	1.0	200
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transition	mean	-0.5041517889663525	1297
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transition	median	-0.3229645602405071	1297
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transition	std	1.0552415589160202	1297
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transversion	mean	-0.38821341085749234	2596
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transversion	median	-0.20476783253252506	2596
+llr_breakdown:hyenadna-small-32k_full	transition_vs_transversion	transversion	std	1.018477467644347	2596
+llr_breakdown:hyenadna-small-32k_full	cpg_context	cpg	mean	2.272602675233556	43
+llr_breakdown:hyenadna-small-32k_full	cpg_context	cpg	median	2.502751111984253	43
+llr_breakdown:hyenadna-small-32k_full	cpg_context	cpg	std	0.8471575268391085	43
+llr_breakdown:hyenadna-small-32k_full	cpg_context	non_cpg	mean	-0.45698929867803956	3850
+llr_breakdown:hyenadna-small-32k_full	cpg_context	non_cpg	median	-0.2482815189287066	3850
+llr_breakdown:hyenadna-small-32k_full	cpg_context	non_cpg	std	0.993557852315024	3850
+llr_breakdown:hyenadna-small-32k_full	consequence	5' UTR	mean	-0.6762020242935483	47
+llr_breakdown:hyenadna-small-32k_full	consequence	5' UTR	median	-0.616923812776804	47
+llr_breakdown:hyenadna-small-32k_full	consequence	5' UTR	std	1.0377645186729814	47
+llr_breakdown:hyenadna-small-32k_full	consequence	Canonical splice	mean	-0.1702971534178286	143
+llr_breakdown:hyenadna-small-32k_full	consequence	Canonical splice	median	0.1238575535826385	143
+llr_breakdown:hyenadna-small-32k_full	consequence	Canonical splice	std	1.111485921305366	143
+llr_breakdown:hyenadna-small-32k_full	consequence	Intronic	mean	-0.5838695009665636	489
+llr_breakdown:hyenadna-small-32k_full	consequence	Intronic	median	-0.2836150759831071	489
+llr_breakdown:hyenadna-small-32k_full	consequence	Intronic	std	1.1331897541349776	489
+llr_breakdown:hyenadna-small-32k_full	consequence	Missense	mean	-0.3776967915778217	2086
+llr_breakdown:hyenadna-small-32k_full	consequence	Missense	median	-0.20969428750686345	2086
+llr_breakdown:hyenadna-small-32k_full	consequence	Missense	std	1.0044861238207878	2086
+llr_breakdown:hyenadna-small-32k_full	consequence	Nonsense	mean	-0.27889310154537467	138
+llr_breakdown:hyenadna-small-32k_full	consequence	Nonsense	median	-0.2630307613871991	138
+llr_breakdown:hyenadna-small-32k_full	consequence	Nonsense	std	0.6694366077297019	138
+llr_breakdown:hyenadna-small-32k_full	consequence	Splice region	mean	-0.4026780343779484	446
+llr_breakdown:hyenadna-small-32k_full	consequence	Splice region	median	-0.28334297100082034	446
+llr_breakdown:hyenadna-small-32k_full	consequence	Splice region	std	0.9043529610587059	446
+llr_breakdown:hyenadna-small-32k_full	consequence	Synonymous	mean	-0.5773594710386961	544
+llr_breakdown:hyenadna-small-32k_full	consequence	Synonymous	median	-0.31247516442090273	544
+llr_breakdown:hyenadna-small-32k_full	consequence	Synonymous	std	1.152152269900531	544
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transition	mean	-0.4963454571060704	1297
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transition	median	-0.4341840744018554	1297
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transition	std	1.2182140158479626	1297
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transversion	mean	-0.4054020828293358	2596
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transversion	median	-0.3024102449417114	2596
+llr_breakdown:nt-v2-50m	transition_vs_transversion	transversion	std	1.396655409998646	2596
+llr_breakdown:nt-v2-50m	cpg_context	cpg	mean	1.6685361751290255	43
+llr_breakdown:nt-v2-50m	cpg_context	cpg	median	1.7646055221557615	43
+llr_breakdown:nt-v2-50m	cpg_context	cpg	std	1.203035784970154	43
+llr_breakdown:nt-v2-50m	cpg_context	non_cpg	mean	-0.4592028364732668	3850
+llr_breakdown:nt-v2-50m	cpg_context	non_cpg	median	-0.3630017042160034	3850
+llr_breakdown:nt-v2-50m	cpg_context	non_cpg	std	1.3232040284168367	3850
+llr_breakdown:nt-v2-50m	consequence	5' UTR	mean	-0.6064733951649768	47
+llr_breakdown:nt-v2-50m	consequence	5' UTR	median	-0.4931869506835937	47
+llr_breakdown:nt-v2-50m	consequence	5' UTR	std	1.2906166178740757	47
+llr_breakdown:nt-v2-50m	consequence	Canonical splice	mean	-0.08698948946866122	143
+llr_breakdown:nt-v2-50m	consequence	Canonical splice	median	0.1000690460205078	143
+llr_breakdown:nt-v2-50m	consequence	Canonical splice	std	1.3516062023113764	143
+llr_breakdown:nt-v2-50m	consequence	Intronic	mean	-0.7333949421568638	489
+llr_breakdown:nt-v2-50m	consequence	Intronic	median	-0.5519266128540039	489
+llr_breakdown:nt-v2-50m	consequence	Intronic	std	1.4905029952746405	489
+llr_breakdown:nt-v2-50m	consequence	Missense	mean	-0.323263971540409	2086
+llr_breakdown:nt-v2-50m	consequence	Missense	median	-0.26099729537963867	2086
+llr_breakdown:nt-v2-50m	consequence	Missense	std	1.3162282084752663	2086
+llr_breakdown:nt-v2-50m	consequence	Nonsense	mean	-0.47774150751639105	138
+llr_breakdown:nt-v2-50m	consequence	Nonsense	median	-0.4939806461334228	138
+llr_breakdown:nt-v2-50m	consequence	Nonsense	std	1.2651752511028365	138
+llr_breakdown:nt-v2-50m	consequence	Splice region	mean	-0.5584608491493448	446
+llr_breakdown:nt-v2-50m	consequence	Splice region	median	-0.5383737087249756	446
+llr_breakdown:nt-v2-50m	consequence	Splice region	std	1.264053788890366	446
+llr_breakdown:nt-v2-50m	consequence	Synonymous	mean	-0.5648519856964841	544
+llr_breakdown:nt-v2-50m	consequence	Synonymous	median	-0.5046795606613159	544
+llr_breakdown:nt-v2-50m	consequence	Synonymous	std	1.305340391524368	544
