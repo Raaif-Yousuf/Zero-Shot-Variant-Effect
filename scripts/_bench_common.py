@@ -25,6 +25,20 @@ NATURAL_DIRECTION_SCORERS = set(COLUMN_SCORERS)
 
 VARIANT_KEY = ["chrom", "pos", "ref", "alt"]
 
+#: Context-sweep subsample size and seed, shared by run_benchmark.py and
+#: summarize_results.py so both scripts pick the exact same positions.
+#:
+#: Started at 150 per the plan; a pilot on real chr17 data (4 threads) showed
+#: hyenadna-small-32k in "full" mode scales far worse than linearly with
+#: window (roughly 0.06 s/position at window 256 vs an estimated 140+
+#: s/position at window 32768), which alone would need several hours at
+#: N=150. Reduced to 30 so the whole sweep (both HyenaDNA-small modes across
+#: five windows, HyenaDNA-medium, and Nucleotide Transformer) fits inside the
+#: ~4 hour wall-time budget with the other required runs. See results/runs.tsv
+#: for the actual measured wall time of every run.
+SWEEP_N_POSITIONS = 30
+SWEEP_SEED = 0
+
 
 def run_id_for(entry: dict) -> str:
     """Deterministic, filesystem-safe run id from one plan.json entry.

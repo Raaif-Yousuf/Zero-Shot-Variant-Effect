@@ -27,7 +27,13 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _bench_common import COLUMN_SCORERS, run_id_for, select_sweep_positions  # noqa: E402
+from _bench_common import (  # noqa: E402
+    COLUMN_SCORERS,
+    SWEEP_N_POSITIONS,
+    SWEEP_SEED,
+    run_id_for,
+    select_sweep_positions,
+)
 
 from zeroshot_vep.cache import ScoreCache  # noqa: E402
 from zeroshot_vep.engine import score_variants  # noqa: E402
@@ -42,8 +48,6 @@ DATASET_FILES = {
     "clinvar": "clinvar_chr17_subsample.tsv",
 }
 FASTA_NAME = "chr17.fa.gz"
-SWEEP_N_POSITIONS = 150
-SWEEP_SEED = 0
 
 _RUN_LOG_COLUMNS = [
     "run_id",

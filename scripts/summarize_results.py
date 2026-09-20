@@ -29,6 +29,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _bench_common import (  # noqa: E402
+    SWEEP_N_POSITIONS,
+    SWEEP_SEED,
     damaging_score,
     join_scores_with_dataset,
     pick_best_model,
@@ -55,9 +57,6 @@ DATASET_FILES = {
     "brca1": "brca1_sge.tsv",
     "clinvar": "clinvar_chr17_subsample.tsv",
 }
-SWEEP_N_POSITIONS = 150
-SWEEP_SEED = 0
-
 # Curated so ROC/PR overlays and score-distribution panels stay within the
 # eight-color categorical palette (see docs on the fixed hue order in plots.py).
 BRCA1_FIGURE_SCORERS = [
