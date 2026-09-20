@@ -55,7 +55,7 @@ uv run zsvep score --variants variants.vcf --fasta chr17.fa --model hyenadna-sma
 uv run python scripts/run_benchmark.py --plan benchmarks/plan.json && uv run python scripts/summarize_results.py
 ```
 
-Tests: `uv run pytest -q` runs 114 tests on tiny fixtures, with no downloads and no model weights.
+Tests: `uv run pytest -q` runs 124 tests (4 skipped) on tiny fixtures, with no downloads and no model weights.
 
 Data: Findlay et al. 2018 (Nature 562:217), ClinVar 2026-09-05, UCSC hg19 and phyloP 100-way.
 Models: HyenaDNA (BSD-3-Clause) and Nucleotide Transformer v2 (CC BY-NC-SA 4.0), downloaded at run
