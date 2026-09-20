@@ -74,6 +74,15 @@ def test_select_sweep_positions_different_seed_differs():
     assert a != b
 
 
+def test_select_sweep_positions_is_nested_across_n():
+    positions = list(range(1000))
+    smaller = select_sweep_positions(positions, n=30, seed=0)
+    larger = select_sweep_positions(positions, n=60, seed=0)
+    assert set(smaller).issubset(set(larger))
+    assert len(smaller) == 30
+    assert len(larger) == 60
+
+
 def test_filter_to_positions():
     df = pd.DataFrame({"pos": [1, 2, 3, 4], "value": ["a", "b", "c", "d"]})
     filtered = filter_to_positions(df, [2, 4])

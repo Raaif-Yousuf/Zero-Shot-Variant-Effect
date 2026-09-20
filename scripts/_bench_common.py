@@ -32,11 +32,16 @@ VARIANT_KEY = ["chrom", "pos", "ref", "alt"]
 #: hyenadna-small-32k in "full" mode scales far worse than linearly with
 #: window (roughly 0.06 s/position at window 256 vs an estimated 140+
 #: s/position at window 32768), which alone would need several hours at
-#: N=150. Reduced to 30 so the whole sweep (both HyenaDNA-small modes across
-#: five windows, HyenaDNA-medium, and Nucleotide Transformer) fits inside the
-#: ~4 hour wall-time budget with the other required runs. See results/runs.tsv
-#: for the actual measured wall time of every run.
-SWEEP_N_POSITIONS = 30
+#: N=150. Reduced to 30 for the first pass so the whole sweep fit inside the
+#: available wall-time budget. Once real (uncontended, 2-lanes-max) per-position
+#: rates were measured, 30 turned out conservative, so it was raised to 60.
+#: The selection is a prefix of one seeded permutation of all positions
+#: (``rng.permutation(all_positions)[:n]``, sorted afterwards for stable
+#: output), not an independent ``rng.choice`` per ``n`` -- so the 30-position
+#: set from the first pass is guaranteed to be a subset of this 60-position
+#: set, and the sqlite score cache makes those 30 positions free to recompute.
+#: See results/runs.tsv for the actual measured wall time of every run.
+SWEEP_N_POSITIONS = 60
 SWEEP_SEED = 0
 
 
@@ -63,13 +68,19 @@ def select_sweep_positions(positions: Iterable[int], n: int, seed: int) -> list[
     """Seeded selection of up to ``n`` unique positions, returned sorted ascending.
 
     If there are ``n`` or fewer unique positions, all of them are returned
-    (nothing to sample). Deterministic for a given ``seed``.
+    (nothing to sample). Otherwise the selection is the first ``n`` entries of
+    ``rng.permutation`` over all unique positions, for a single seeded
+    permutation shared across every ``n``. That makes the selection nested:
+    the set chosen for a smaller ``n`` is always a subset of the set chosen
+    for a larger ``n`` with the same ``seed``, so growing the subsample only
+    adds positions instead of picking an unrelated set. Deterministic for a
+    given ``seed``.
     """
     unique = np.sort(np.unique(np.asarray(list(positions))))
     if len(unique) <= n:
         return [int(x) for x in unique]
     rng = np.random.default_rng(seed)
-    chosen = rng.choice(unique, size=n, replace=False)
+    chosen = rng.permutation(unique)[:n]
     return sorted(int(x) for x in chosen)
 
 
